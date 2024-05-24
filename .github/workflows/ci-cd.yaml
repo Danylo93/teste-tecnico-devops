@@ -41,13 +41,13 @@ jobs:
 
     - name: List archives production artifacts
       run: ls -la ./frontend
-      
+
     - name: Upload archived production artifacts
       uses: actions/upload-artifact@v4
       continue-on-error: true
       with:
         name: build-artifacts
-        path: ../build.zip
+        path: ./build.zip
 
     - name: Create GitHub Release
       id: create_release
@@ -61,6 +61,7 @@ jobs:
         prerelease: false
         body: |
           Release notes for version v1.0.${{ github.run_number }}-${{ env.RELEASE_TIMESTAMP }}
+    
     - name: Upload release asset
       uses: actions/upload-release-asset@v1
       env:
@@ -85,10 +86,10 @@ jobs:
     - name: Download build artifacts
       uses: actions/download-artifact@v4
       with:
-        path: ../build
+        path: ./frontend
 
     - name: Display structure of downloaded files
-      run: ls -R ../build
+      run: ls -R ./frontend
 
     - name: List Build Artifacts
       run: ls -la ./frontend/build
