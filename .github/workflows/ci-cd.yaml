@@ -92,7 +92,7 @@ jobs:
       run: ls -R ./frontend
 
     - name: List Build Artifacts
-      run: ls -la ./frontend/build
+      run: ls -la ./frontend
 
     - name: Deploy to test environment
       run: echo "Deploying to test environment"
