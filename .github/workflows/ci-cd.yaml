@@ -39,6 +39,9 @@ jobs:
         zip -r -9 ../build.zip .
       working-directory: ${{ github.workspace }}
 
+    - name: List archives production artifacts
+      run: ls -la ./frontend
+      
     - name: Upload archived production artifacts
       uses: actions/upload-artifact@v4
       continue-on-error: true
