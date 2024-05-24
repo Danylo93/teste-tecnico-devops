@@ -82,8 +82,10 @@ jobs:
     - name: Download build artifacts
       uses: actions/download-artifact@v4
       with:
-        name: build-artifacts
-        path: ./frontend/build
+        path: ../build
+
+    - name: Display structure of downloaded files
+      run: ls -R ../build
 
     - name: List Build Artifacts
       run: ls -la ./frontend/build
