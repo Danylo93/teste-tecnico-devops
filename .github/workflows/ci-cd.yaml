@@ -58,7 +58,6 @@ jobs:
         prerelease: false
         body: |
           Release notes for version v1.0.${{ github.run_number }}-${{ env.RELEASE_TIMESTAMP }}
-
     - name: Upload release asset
       uses: actions/upload-release-asset@v1
       env:
@@ -74,7 +73,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: test
-      url: https://placeholder-test-environment-url.com
+      url: https://placeholder-test-environment-url.com  # Altere para a URL do seu ambiente
 
     steps:
     - name: Checkout code
@@ -111,4 +110,3 @@ jobs:
         body: |
           The CI/CD pipeline failed during the ${{ job.status }} job.
         to: agenciafwdigital@gmail.com
-  
