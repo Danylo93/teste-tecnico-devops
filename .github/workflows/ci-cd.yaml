@@ -10,46 +10,47 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [12.x, 14.x, 16.x]
+        node-version: [16.x]
         
     steps:
-    - name: Checkout code
+    - name: Checando Código Fonte
       uses: actions/checkout@v3
 
-    - name: Use Node.js ${{ matrix.node-version }}
+    - name: Usando a versão ${{ matrix.node-version }} do Node.js
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
 
-    - name: Install dependencies
+    - name: Instalando as dependências do projeto
       run: cd frontend && yarn install
 
-    - name: Run unit tests
+    - name: Executando testes unitários
       run: cd frontend && yarn test
 
-    - name: Build application
+    - name: Validando se diretório ou arquivo existe para o build
+      run: npx ts-node ./frontend/src/check-file.ts
+
+    - name: Construindo aplicação
       run: cd frontend && yarn build
 
-    - name: Set timestamp
+    - name: Criando um Timestamp para Diversificar Versões do Release
       run: echo "RELEASE_TIMESTAMP=$(date +%s)" >> $GITHUB_ENV
 
-    - name: Archive production artifacts
+    - name: Arquivando artefatos de produção
       run: |
         cd frontend
         zip -r -9 ../build.zip .
       working-directory: ${{ github.workspace }}
 
-    - name: List archives production artifacts
-      run: ls -la ./frontend
 
-    - name: Upload archived production artifacts
+    - name: Carregando artefatos de produção
       uses: actions/upload-artifact@v4
       continue-on-error: true
       with:
         name: build-artifacts
         path: ./build.zip
 
-    - name: Create GitHub Release
+    - name: Criando versão do GitHub
       id: create_release
       uses: actions/create-release@v1
       env:
@@ -62,7 +63,7 @@ jobs:
         body: |
           Release notes for version v1.0.${{ github.run_number }}-${{ env.RELEASE_TIMESTAMP }}
     
-    - name: Upload release asset
+    - name: Carregando recurso de lançamento
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -77,25 +78,19 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: test
-      url: https://placeholder-test-environment-url.com  # Altere para a URL do seu ambiente
+      url: https://placeholder-test-environment-url.com 
 
     steps:
-    - name: Checkout code
+    - name: Checando Código
       uses: actions/checkout@v3
 
-    - name: Download build artifacts
+    - name: Baixando artefatos de compilação
       uses: actions/download-artifact@v4
       with:
         path: ./frontend
 
-    - name: Display structure of downloaded files
-      run: ls -R ./frontend
-
-    - name: List Build Artifacts
-      run: ls -la ./frontend
-
-    - name: Deploy to test environment
-      run: echo "Deploying to test environment"
+    - name: Realizando Deploy no ambiente de testes
+      run: echo "Realizando Deploy no ambiente de testes"
       env:
         DEPLOY_ENVIRONMENT: test
   
@@ -104,7 +99,7 @@ jobs:
     runs-on: ubuntu-latest
     if: failure()
     steps:
-    - name: Send notification on failure
+    - name: Enviando notificação em caso de falha
       uses: dawidd6/action-send-mail@v3
       with:
         server_address: smtp.gmail.com
@@ -112,7 +107,7 @@ jobs:
         username: ${{ secrets.SMTP_USERNAME }}
         password: ${{ secrets.SMTP_PASSWORD }}
         from: agenciafwdigital@gmail.com
-        subject: CI/CD Pipeline Failed
+        subject: Falha no pipeline de CI/CD
         body: |
-          The CI/CD pipeline failed during the ${{ job.status }} job.
+          O pipeline de CI/CD falhou durante o ${{ job.status }}.
         to: agenciafwdigital@gmail.com
